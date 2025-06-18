@@ -1,0 +1,112 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AI 전문가 성향 테스트</title>
+<style>
+  body { font-family: 'Noto Sans KR', sans-serif; background: #f1f5f9; margin: 0; padding: 0; }
+  .container { max-width: 700px; margin: 40px auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); }
+  h1 { font-size: 24px; margin-bottom: 24px; text-align: center; }
+  .question { font-size: 20px; margin-bottom: 24px; text-align: center; }
+  .option { background: #e0e7ff; border: 2px solid #c7d2fe; border-radius: 10px; padding: 16px; margin: 10px 0; cursor: pointer; transition: background 0.3s, transform 0.2s; font-size: 16px; }
+  .option:hover { background: #c7d2fe; transform: scale(1.02); }
+  #result { display: none; margin-top: 40px; background: #fff; border-radius: 10px; padding: 24px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.12); }
+  #result h2 { margin-bottom: 20px; font-size: 26px; font-weight: 700; }
+  #result p { font-size: 18px; line-height: 1.6; }
+  #result img { width: 200px; height: auto; margin-top: 20px; border-radius: 12px; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>나는 어떤 인공지능 전문가일까?</h1>
+  <div id="quiz">
+    <div class="question" id="question"></div>
+    <div id="options"></div>
+  </div>
+  <div id="result">
+    <h2 id="resultTitle"></h2>
+    <img id="resultImage" src="" alt="AI 전문가 이미지" />
+    <p id="resultDesc"></p>
+  </div>
+</div>
+
+<script>
+const questions = [
+  { question: "친구가 새로운 AI 앱을 추천해줬다. 기능을 어떻게 활용할까?", options: ["기능을 분석하고 활용법을 조사한다", "직접 사용해보며 장단점을 파악한다", "즉시 적용해보고 경험한다", "사람들의 반응을 듣고 판단한다"] },
+  { question: "AI가 만든 그림과 사람의 그림을 비교했다. 어떤 생각이 드는가?", options: ["기술적인 차이에 주목한다", "두 그림의 스타일과 차이를 느낀다", "그림을 직접 만들어보고 싶다", "그림에서 느껴지는 감정을 중시한다"] },
+  { question: "학교에서 AI 프로젝트를 맡았다. 어떤 역할이 어울릴까?", options: ["데이터와 알고리즘 분석", "기획과 설계", "실제 구현과 테스트", "사용자 경험과 윤리적 고려"] },
+  { question: "AI 추천 음악이 마음에 들었다면, 어떤 점이 궁금한가?", options: ["알고리즘의 원리", "창의적 표현", "음악 생성 과정", "감성적 반응"] },
+  { question: "내가 만든 AI 프로그램이 이상하게 작동한다면, 어떻게 할까?", options: ["오류 원인을 논리적으로 분석한다", "프로그램 설계를 다시 점검한다", "빠르게 수정하고 재실행한다", "사용자 피드백을 수집한다"] },
+  { question: "AI 관련 진로를 조사할 기회가 생겼다. 무엇을 먼저 할까?", options: ["기술적인 공부 계획을 세운다", "진로 방향과 비전을 고민한다", "실제 프로젝트 경험을 찾는다", "사회적 영향과 윤리를 탐구한다"] },
+  { question: "AI 챗봇을 친구에게 보여줬다. 대화를 어떻게 평가할까?", options: ["대화 논리와 정확성", "대화의 자연스러움", "즉시 피드백을 주고 개선", "사용자 반응과 감정"] },
+  { question: "AI 영상 강의를 듣게 되었다. 어떤 부분에 집중할까?", options: ["기술 개념과 원리", "창의적인 응용", "실습과 코드 작성", "윤리와 사회적 이슈"] },
+  { question: "AI 분석 역할을 맡았다. 주요 업무는 무엇일까?", options: ["데이터 처리 및 모델링", "시스템 설계", "프로그램 개발 및 배포", "사용자 지원과 커뮤니케이션"] },
+  { question: "AI가 쓴 시를 읽었다면, 어떤 생각이 들까?", options: ["언어 구조와 패턴", "창의성과 미학", "기술적 생성 과정", "감정과 공감"] },
+  { question: "AI 교통 예측 앱을 봤다. 어떤 점이 궁금한가?", options: ["모델의 정확도", "서비스 설계", "실제 활용성", "사회적 영향"] },
+  { question: "AI 진로 상담을 받게 되었다면, 무엇을 묻겠는가?", options: ["필요한 기술과 학습법", "전문가 역할과 책임", "실무 경험과 프로젝트", "윤리적 문제와 사회"] }
+];
+
+const results = [
+  {
+    type: "분석형 🧠",
+    desc: "<strong>대표 성격:</strong> 논리적, 탐구적<br><strong>추천 분야:</strong> 데이터 과학자, AI 분석가<br><strong>필요 역량:</strong> 수학/통계, 파이썬",
+    img: "https://user-images.githubusercontent.com/94111088/189637561-47862b03-7c64-43d5-b3d6-f4303cb38196.png"
+  },
+  {
+    type: "설계형 🛠",
+    desc: "<strong>대표 성격:</strong> 창의적, 시각적<br><strong>추천 분야:</strong> AI 서비스 기획자, UX 디자이너<br><strong>필요 역량:</strong> 디자인 감각, 사용자 이해",
+    img: "https://user-images.githubusercontent.com/94111088/189637571-eaf6e8a1-28d1-417a-a1bc-35af8e9e3e8d.png"
+  },
+  {
+    type: "실행형 🚀",
+    desc: "<strong>대표 성격:</strong> 활동적, 도전적<br><strong>추천 분야:</strong> 로봇 엔지니어, 자율주행 개발자<br><strong>필요 역량:</strong> 하드웨어 이해, 문제 해결",
+    img: "https://user-images.githubusercontent.com/94111088/189637572-e17a13c7-0db6-4ea3-9955-2e601139e3bb.png"
+  },
+  {
+    type: "공감형 💖",
+    desc: "<strong>대표 성격:</strong> 협력적, 사람 중심<br><strong>추천 분야:</strong> AI 윤리 컨설턴트, 교육 전문가<br><strong>필요 역량:</strong> 윤리적 사고, 커뮤니케이션",
+    img: "https://user-images.githubusercontent.com/94111088/189637573-3f71d232-6523-4f0d-b2f3-3ae52e5e1e07.png"
+  }
+];
+
+let current = 0;
+let scores = [0, 0, 0, 0];
+
+function showQuestion() {
+  const q = questions[current];
+  document.getElementById("question").innerText = q.question;
+  const optDiv = document.getElementById("options");
+  optDiv.innerHTML = "";
+  q.options.forEach((opt, idx) => {
+    const div = document.createElement("div");
+    div.className = "option";
+    div.innerText = opt;
+    div.onclick = () => {
+      scores[idx]++;
+      current++;
+      if (current < questions.length) {
+        showQuestion();
+      } else {
+        showResult();
+      }
+    };
+    optDiv.appendChild(div);
+  });
+}
+
+function showResult() {
+  const max = scores.indexOf(Math.max(...scores));
+  const result = results[max];
+  document.getElementById("quiz").style.display = "none";
+  document.getElementById("result").style.display = "block";
+  document.getElementById("resultTitle").innerText = result.type;
+  document.getElementById("resultDesc").innerHTML = result.desc;
+  document.getElementById("resultImage").src = result.img;
+}
+
+showQuestion();
+</script>
+</body>
+</html>
